@@ -11,7 +11,7 @@ pipeline {
 
     stages {
         stage('Checkout') {
-            steps {a
+            steps {
                 git branch: 'master', url: 'https://github.com/Curiousgoal202/new-python-pro1.git'
             }
         }
@@ -30,7 +30,7 @@ pipeline {
 
         stage('Docker Build') {
             steps {
-                sh "docker build -t $IMAGE_NAME:$IMAGE_TAG ."
+                sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
             }
         }
 
@@ -38,7 +38,7 @@ pipeline {
             steps {
                 script {
                     withCredentials([usernamePassword(
-                        credentialsId: 'creds',
+                        credentialsId: "${DOCKERHUB_CREDENTIALS}",
                         usernameVariable: 'DOCKER_USER',
                         passwordVariable: 'DOCKER_PASS'
                     )]) {
@@ -55,23 +55,24 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh """
-                docker stop webserver || true
-                docker rm webserver || true
-                docker run -d --name webserver -p $SERVER_PORT:80 $IMAGE_NAME:$IMAGE_TAG
+                    docker stop webserver || true
+                    docker rm webserver || true
+                    docker run -d --name webserver -p ${SERVER_PORT}:80 ${IMAGE_NAME}:${IMAGE_TAG}
                 """
             }
         }
 
         stage('Health Check') {
             steps {
-                              sh '''
-                sleep 5
-                STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:${SERVER_PORT}/)
-                if [ "$STATUS" -ne 200 ]; then
-                    echo "❌ Deployment failed with status $STATUS"
-                    exit 1
-                fi
-                echo "✅ Deployment successful, status $STATUS"
+                sh """
+                    sleep 5
+                    STATUS=\$(curl -s -o /dev/null -w "%{http_code}" http://localhost:${SERVER_PORT}/)
+                    if [ "\$STATUS" -ne 200 ]; then
+                        echo "❌ Deployment failed with status \$STATUS"
+                        exit 1
+                    fi
+                    echo "✅ Deployment successful, status \$STATUS"
+                """
             }
         }
     }
