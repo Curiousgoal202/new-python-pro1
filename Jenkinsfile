@@ -10,14 +10,14 @@ pipeline {
     }
 
     stages {
-        // 1️⃣ Checkout
+       
         stage('Checkout') {
             steps {
                 git branch: 'master', url: 'https://github.com/Curiousgoal202/new-python-pro1.git'
 	            }
         }
 
-        // 2️⃣ Build (examples for different languages)
+    
         stage('Build') {
             steps {
                  sh 'pip install -r requirements.txt'
@@ -25,7 +25,7 @@ pipeline {
             }
         }
 
-        // 3️⃣ Test (examples for different languages)
+
         stage('Test') {
             steps {
  
@@ -35,14 +35,14 @@ pipeline {
             }
         }
 
-        // 4️⃣ Docker Build
+
         stage('Docker Build') {
             steps {
                 sh "docker build -t $IMAGE_NAME:$IMAGE_TAG ."
             }
         }
 
-        // 5️⃣ Docker Push
+
         stage('Docker Push') {
             steps {
                 script {
@@ -59,7 +59,6 @@ pipeline {
             }
         }
 
-        // 6️⃣ Deploy
         stage('Deploy') {
             steps {
                 sh """
@@ -70,7 +69,6 @@ pipeline {
             }
         }
 
-        // 7️⃣ Health Check
         stage('Health Check') {
             steps {
                 sh """
