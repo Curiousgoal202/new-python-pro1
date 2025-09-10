@@ -2,14 +2,13 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-COPY requirements.txt .
+# Copy app and requirements
+COPY app.py requirements.txt ./
+
+# Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY app.py .
-
-# Expose port
 EXPOSE 80
 
-# Run uvicorn server directly
+# Start FastAPI on port 80
 CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "80"]
-
