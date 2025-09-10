@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+sqlmodel
+asyncpg
+alembic
+python-jose
+passlib[bcrypt]
+celery[redis]
+redis
