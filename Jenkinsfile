@@ -11,7 +11,7 @@ pipeline {
 
     stages {
         stage('Checkout') {
-            steps {
+            steps {a
                 git branch: 'master', url: 'https://github.com/Curiousgoal202/new-python-pro1.git'
             }
         }
@@ -64,10 +64,14 @@ pipeline {
 
         stage('Health Check') {
             steps {
-                sh """
+                              sh '''
                 sleep 5
-                curl -s -o /dev/null -w "%{http_code}" http://localhost:$SERVER_PORT/ | grep 200
-                """
+                STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:${SERVER_PORT}/)
+                if [ "$STATUS" -ne 200 ]; then
+                    echo "❌ Deployment failed with status $STATUS"
+                    exit 1
+                fi
+                echo "✅ Deployment successful, status $STATUS"
             }
         }
     }
