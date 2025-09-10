@@ -7,3 +7,4 @@ python-jose
 passlib[bcrypt]
 celery[redis]
 redis
+aiosqlite
