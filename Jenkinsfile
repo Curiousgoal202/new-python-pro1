@@ -66,7 +66,7 @@ pipeline {
             steps {
                 sh """
                 sleep 5
-                curl -s -o /dev/null -w "%{http_code}" http://localhost:$SERVER_PORT | grep 200
+                curl -s -o /dev/null -w "%{http_code}" http://localhost:$SERVER_PORT/ | grep 200
                 """
             }
         }
